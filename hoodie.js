@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
         navbar.classList.toggle('active');
     });
     
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.navbar ul li a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navbar.classList.remove('active');
+        });
+    });
+    
     // Change header style on scroll
     const header = document.querySelector('.header');
     
@@ -169,7 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <button class="action-btn add-to-wishlist" data-id="${product.id}"><i class="fas fa-heart"></i></button>
+                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn add-to-wishlist" data-id="${product.id}"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
                 <div class="product-info">
@@ -258,15 +267,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         addToWishlistBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                
-                if (this.classList.contains('active')) {
-                    this.innerHTML = '<i class="fas fa-heart" style="color: red;"></i>';
-                    // Show notification
-                    showNotification('Added to wishlist');
-                } else {
-                    this.innerHTML = '<i class="fas fa-heart"></i>';
-                }
+                const productId = parseInt(this.getAttribute('data-id'));
+                const product = products.find(p => p.id === productId);
+                addToWishlist(product, this);
+            });
+        });
+        
+        // Quick view buttons
+        const quickViewBtns = document.querySelectorAll('.quick-view');
+        
+        quickViewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                const product = products.find(p => p.id === productId);
+                showQuickView(product);
             });
         });
     }
@@ -312,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         updateCart();
+        showNotification(`${product.title} added to cart`);
     }
     
     // Update cart display
@@ -414,6 +429,152 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Wishlist functionality
+    const wishlistSidebar = document.querySelector('.wishlist-sidebar');
+    const wishlistIcon = document.querySelector('.wishlist-icon');
+    const closeWishlist = document.querySelector('.close-wishlist');
+    let wishlist = [];
+    
+    // Open/close wishlist
+    wishlistIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        wishlistSidebar.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    closeWishlist.addEventListener('click', function() {
+        wishlistSidebar.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Add to wishlist function
+    function addToWishlist(product, button) {
+        const existingItem = wishlist.find(item => item.id === product.id);
+        
+        if (existingItem) {
+            wishlist = wishlist.filter(item => item.id !== product.id);
+            button.innerHTML = '<i class="far fa-heart"></i>';
+            button.style.color = '';
+            showNotification(`${product.title} removed from wishlist`);
+        } else {
+            wishlist.push({
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                image: product.image
+            });
+            button.innerHTML = '<i class="fas fa-heart" style="color: red;"></i>';
+            showNotification(`${product.title} added to wishlist`);
+        }
+        
+        updateWishlist();
+    }
+    
+    // Update wishlist display
+    function updateWishlist() {
+        const wishlistItemsContainer = document.querySelector('.wishlist-items');
+        const wishlistCount = document.querySelector('.wishlist-count');
+        
+        // Update wishlist count
+        wishlistCount.textContent = wishlist.length;
+        
+        // Update wishlist items
+        if (wishlist.length === 0) {
+            wishlistItemsContainer.innerHTML = `
+                <div class="empty-wishlist">
+                    <i class="far fa-heart"></i>
+                    <p>Your wishlist is empty</p>
+                </div>
+            `;
+        } else {
+            wishlistItemsContainer.innerHTML = '';
+            
+            wishlist.forEach(item => {
+                const wishlistItem = document.createElement('div');
+                wishlistItem.className = 'wishlist-item';
+                wishlistItem.innerHTML = `
+                    <div class="wishlist-item-img">
+                        <img src="${item.image}" alt="${item.title}">
+                    </div>
+                    <div class="wishlist-item-details">
+                        <h4 class="wishlist-item-title">${item.title}</h4>
+                        <div class="wishlist-item-price">${formatKESPrice(item.price)}</div>
+                    </div>
+                    <div class="remove-item" data-id="${item.id}">&times;</div>
+                `;
+                
+                wishlistItemsContainer.appendChild(wishlistItem);
+                
+                // Add event listener to remove button
+                const removeBtn = wishlistItem.querySelector('.remove-item');
+                removeBtn.addEventListener('click', function() {
+                    wishlist = wishlist.filter(wishlistItem => wishlistItem.id !== item.id);
+                    updateWishlist();
+                    showNotification(`${item.title} removed from wishlist`);
+                    
+                    // Also update the heart icon in the product card
+                    const productBtn = document.querySelector(`.add-to-wishlist[data-id="${item.id}"]`);
+                    if (productBtn) {
+                        productBtn.innerHTML = '<i class="far fa-heart"></i>';
+                    }
+                });
+            });
+        }
+    }
+    
+    // View cart button in wishlist
+    const viewCartBtn = document.querySelector('.view-cart-btn');
+    viewCartBtn.addEventListener('click', function() {
+        wishlistSidebar.classList.remove('active');
+        cartSidebar.classList.add('active');
+    });
+    
+    // Quick view modal
+    const quickViewModal = document.getElementById('quick-view-modal');
+    const closeModal = document.querySelector('.close-modal');
+    
+    function showQuickView(product) {
+        document.getElementById('modal-product-title').textContent = product.title;
+        document.getElementById('modal-product-price').textContent = formatKESPrice(product.price);
+        document.getElementById('modal-product-description').textContent = product.description;
+        
+        if (product.oldPrice) {
+            document.getElementById('modal-product-old-price').textContent = formatKESPrice(product.oldPrice);
+            document.getElementById('modal-product-old-price').style.display = 'inline';
+            document.getElementById('modal-product-discount').textContent = `${product.discount}% OFF`;
+            document.getElementById('modal-product-discount').style.display = 'inline';
+        } else {
+            document.getElementById('modal-product-old-price').style.display = 'none';
+            document.getElementById('modal-product-discount').style.display = 'none';
+        }
+        
+        document.getElementById('modal-main-image').src = product.image;
+        
+        quickViewModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    closeModal.addEventListener('click', function() {
+        quickViewModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === quickViewModal) {
+            quickViewModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        if (e.target === cartSidebar) {
+            cartSidebar.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        if (e.target === wishlistSidebar) {
+            wishlistSidebar.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
     // Notification function
     function showNotification(message, type = 'success') {
         const notification = document.createElement('div');
@@ -432,36 +593,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }, 3000);
     }
-    
-    // Add notification styles
-    const notificationStyles = document.createElement('style');
-    notificationStyles.textContent = `
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 5px;
-            color: white;
-            font-weight: 500;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 3000;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background-color: #4CAF50;
-        }
-        
-        .notification.error {
-            background-color: #F44336;
-        }
-    `;
-    document.head.appendChild(notificationStyles);
     
     // Initialize the page
     displayProducts(products);
