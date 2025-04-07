@@ -30,6 +30,7 @@
                     <input type="text" placeholder="Search hoodies...">
                     <i class="fas fa-search"></i>
                 </div>
+                <a href="#" class="wishlist-icon"><i class="far fa-heart"></i><span class="wishlist-count">0</span></a>
                 <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
                 <a href="#" class="user-icon"><i class="fas fa-user"></i></a>
                 <div class="hamburger"><i class="fas fa-bars"></i></div>
@@ -338,6 +339,25 @@
                 <span class="total-price">$0.00</span>
             </div>
             <button class="btn btn-primary checkout-btn">Proceed to Checkout</button>
+            <button class="btn btn-secondary continue-shopping">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Wishlist Sidebar -->
+    <div class="wishlist-sidebar">
+        <div class="wishlist-header">
+            <h3>Your Wishlist</h3>
+            <span class="close-wishlist">&times;</span>
+        </div>
+        <div class="wishlist-items">
+            <!-- Wishlist items will be added here -->
+            <div class="empty-wishlist">
+                <i class="far fa-heart"></i>
+                <p>Your wishlist is empty</p>
+            </div>
+        </div>
+        <div class="wishlist-footer">
+            <button class="btn btn-primary view-cart-btn">View Cart</button>
             <button class="btn btn-secondary continue-shopping">Continue Shopping</button>
         </div>
     </div>
