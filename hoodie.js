@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 1,
             title: "Urban Classic Hoodie",
-            price: 49.99,
-            oldPrice: 69.99,
+            price: 4999, // Price in KES
+            oldPrice: 6999,
             discount: 29,
             image: "images/hoodie/all/h2.png",
             category: "men",
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 2,
             title: "Pastel Dream Hoodie",
-            price: 54.99,
-            oldPrice: 64.99,
+            price: 5499,
+            oldPrice: 6499,
             discount: 15,
             image: "images/hoodie/all/h3.png",
             category: "women",
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 3,
             title: "Graphic Print Hoodie",
-            price: 59.99,
+            price: 5999,
             image: "images/hoodie/all/h4.png",
             category: "unisex",
             rating: 4,
@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 4,
             title: "Athletic Fit Hoodie",
-            price: 44.99,
-            oldPrice: 59.99,
+            price: 4499,
+            oldPrice: 5999,
             discount: 25,
             image: "images/hoodie/all/h5.png",
             category: "men",
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 5,
             title: "Oversized Comfort Hoodie",
-            price: 52.99,
+            price: 5299,
             image: "images/hoodie/all/h6.png",
             category: "women",
             rating: 5,
@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 6,
             title: "Vintage Wash Hoodie",
-            price: 47.99,
-            oldPrice: 59.99,
+            price: 4799,
+            oldPrice: 5999,
             discount: 20,
             image: "images/hoodie/all/h7.png",
             category: "unisex",
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 7,
             title: "Fleece-Lined Hoodie",
-            price: 64.99,
+            price: 6499,
             image: "images/hoodie/all/h8.png",
             category: "men",
             rating: 4.5,
@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 8,
             title: "Cropped Hoodie",
-            price: 49.99,
-            oldPrice: 64.99,
+            price: 4999,
+            oldPrice: 6499,
             discount: 23,
             image: "images/hoodie/all/h9.png",
             category: "women",
@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreBtn = document.getElementById('load-more-btn');
     let visibleProducts = 8; // Initial number of visible products
     let allProducts = [...products]; // Copy of all products
+    
+    // Helper function to format KES prices
+    function formatKESPrice(price) {
+        return new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(price);
+    }
     
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
@@ -145,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             let oldPrice = '';
             if (product.oldPrice) {
-                oldPrice = `<span class="old-price">$${product.oldPrice.toFixed(2)}</span>`;
+                oldPrice = `<span class="old-price">${formatKESPrice(product.oldPrice)}</span>`;
             }
             
             let ratingStars = '';
@@ -164,14 +169,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     <div class="product-actions">
-                        <button class="action-btn quick-view" data-id="${product.id}"><i class="fas fa-eye"></i></button>
                         <button class="action-btn add-to-wishlist" data-id="${product.id}"><i class="fas fa-heart"></i></button>
                     </div>
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.title}</h3>
                     <div class="product-price">
-                        <span class="current-price">$${product.price.toFixed(2)}</span>
+                        <span class="current-price">${formatKESPrice(product.price)}</span>
                         ${oldPrice}
                     </div>
                     <div class="product-rating">
@@ -192,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadMoreBtn.style.display = 'block';
         }
         
-        // Initialize quick view and add to cart buttons
+        // Initialize product buttons
         initProductButtons();
     }
     
@@ -227,19 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
         displayProducts(allProducts);
     });
     
-    // Initialize product buttons (quick view and add to cart)
+    // Initialize product buttons (add to cart and wishlist)
     function initProductButtons() {
-        // Quick view buttons
-        const quickViewBtns = document.querySelectorAll('.quick-view');
-        
-        quickViewBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                const product = products.find(p => p.id === productId);
-                openQuickView(product);
-            });
-        });
-        
         // Add to cart buttons
         const addToCartBtns = document.querySelectorAll('.add-to-cart');
         
@@ -278,93 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Quick view modal
-    const quickViewModal = document.getElementById('quick-view-modal');
-    const closeModal = document.querySelector('.close-modal');
-    
-    function openQuickView(product) {
-        // Set product details in modal
-        document.getElementById('modal-product-title').textContent = product.title;
-        document.getElementById('modal-product-price').textContent = `$${product.price.toFixed(2)}`;
-        
-        if (product.oldPrice) {
-            document.getElementById('modal-product-old-price').textContent = `$${product.oldPrice.toFixed(2)}`;
-            document.getElementById('modal-product-discount').textContent = `${product.discount}% OFF`;
-        } else {
-            document.getElementById('modal-product-old-price').textContent = '';
-            document.getElementById('modal-product-discount').textContent = '';
-        }
-        
-        document.getElementById('modal-product-description').textContent = product.description;
-        document.getElementById('modal-main-image').src = product.image;
-        
-        // Clear thumbnails
-        const thumbnailsContainer = document.querySelector('.thumbnail-images');
-        thumbnailsContainer.innerHTML = '';
-        
-        // Add thumbnails (in a real app, you'd have multiple images)
-        for (let i = 0; i < 3; i++) {
-            const thumbnail = document.createElement('div');
-            thumbnail.className = 'thumbnail';
-            if (i === 0) thumbnail.classList.add('active');
-            thumbnail.innerHTML = `<img src="${product.image}" alt="Thumbnail ${i + 1}">`;
-            thumbnailsContainer.appendChild(thumbnail);
-        }
-        
-        // Add click event to thumbnails
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                thumbnails.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('modal-main-image').src = this.querySelector('img').src;
-            });
-        });
-        
-        // Initialize quantity selector
-        const quantityInput = document.querySelector('.quantity-control input');
-        const quantityMinus = document.querySelector('.quantity-minus');
-        const quantityPlus = document.querySelector('.quantity-plus');
-        
-        quantityMinus.addEventListener('click', function() {
-            let value = parseInt(quantityInput.value);
-            if (value > 1) {
-                quantityInput.value = value - 1;
-            }
-        });
-        
-        quantityPlus.addEventListener('click', function() {
-            let value = parseInt(quantityInput.value);
-            quantityInput.value = value + 1;
-        });
-        
-        // Add to cart button in modal
-        const modalAddToCart = document.querySelector('.modal .add-to-cart');
-        modalAddToCart.addEventListener('click', function() {
-            const quantity = parseInt(quantityInput.value);
-            addToCart(product, quantity);
-            showNotification(`${quantity} ${product.title} added to cart`);
-            quickViewModal.classList.remove('active');
-        });
-        
-        // Open modal
-        quickViewModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    closeModal.addEventListener('click', function() {
-        quickViewModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-    
-    // Close modal when clicking outside
-    quickViewModal.addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-    });
-    
     // Cart functionality
     const cartSidebar = document.querySelector('.cart-sidebar');
     const cartIcon = document.querySelector('.cart-icon');
@@ -388,8 +294,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cartSidebar.classList.remove('active');
         document.body.style.overflow = 'auto';
     });
-    
-    // Close cart when clicking outside (not implemented in this example)
     
     // Add to cart function
     function addToCart(product, quantity = 1) {
@@ -440,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="cart-item-details">
                         <h4 class="cart-item-title">${item.title}</h4>
-                        <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                        <div class="cart-item-price">${formatKESPrice(item.price * item.quantity)}</div>
                         <div class="cart-item-quantity">
                             <button class="decrement">-</button>
                             <span>${item.quantity}</span>
@@ -462,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (item.quantity > 1) {
                         item.quantity--;
                         quantitySpan.textContent = item.quantity;
-                        cartItem.querySelector('.cart-item-price').textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+                        cartItem.querySelector('.cart-item-price').textContent = formatKESPrice(item.price * item.quantity);
                         updateCartTotal();
                     }
                 });
@@ -470,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 incrementBtn.addEventListener('click', function() {
                     item.quantity++;
                     quantitySpan.textContent = item.quantity;
-                    cartItem.querySelector('.cart-item-price').textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+                    cartItem.querySelector('.cart-item-price').textContent = formatKESPrice(item.price * item.quantity);
                     updateCartTotal();
                 });
                 
@@ -490,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCartTotal() {
         const totalPrice = document.querySelector('.total-price');
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        totalPrice.textContent = `$${total.toFixed(2)}`;
+        totalPrice.textContent = formatKESPrice(total);
     }
     
     // Checkout button
