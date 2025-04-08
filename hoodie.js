@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showSlide(currentSlide);
     }, 5000);
 
-    // Product Data
+    // Product Data - This would typically come from a backend/database
     const products = [
         {
             id: 1,
@@ -79,15 +79,134 @@ document.addEventListener('DOMContentLoaded', function() {
             inCart: false,
             quantity: 1
         },
-        // ... (rest of the product data remains the same)
+        {
+            id: 2,
+            title: "Oversized Comfort Hoodie",
+            category: "Women's Collection",
+            price: 49.99,
+            oldPrice: 69.99,
+            discount: 29,
+            rating: 4.7,
+            reviews: 89,
+            image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1965&q=80",
+            colors: ["Pink", "White", "Beige"],
+            sizes: ["XS", "S", "M", "L"],
+            isNew: false,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 3,
+            title: "Vintage Logo Hoodie",
+            category: "Unisex",
+            price: 54.99,
+            oldPrice: 64.99,
+            discount: 15,
+            rating: 4.3,
+            reviews: 156,
+            image: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80",
+            colors: ["Black", "White", "Red"],
+            sizes: ["S", "M", "L", "XL", "XXL"],
+            isNew: false,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 4,
+            title: "Athletic Performance Hoodie",
+            category: "Men's Collection",
+            price: 69.99,
+            oldPrice: 89.99,
+            discount: 22,
+            rating: 4.8,
+            reviews: 201,
+            image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            colors: ["Navy", "Gray", "Black"],
+            sizes: ["M", "L", "XL", "XXL"],
+            isNew: true,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 5,
+            title: "Cropped Hoodie",
+            category: "Women's Collection",
+            price: 45.99,
+            oldPrice: 55.99,
+            discount: 18,
+            rating: 4.4,
+            reviews: 67,
+            image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+            colors: ["White", "Lavender", "Mint"],
+            sizes: ["XS", "S", "M"],
+            isNew: false,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 6,
+            title: "Graphic Print Hoodie",
+            category: "Unisex",
+            price: 49.99,
+            oldPrice: 59.99,
+            discount: 17,
+            rating: 4.6,
+            reviews: 112,
+            image: "https://images.unsplash.com/photo-1603344797033-f0f4f587ab60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            colors: ["Black", "White"],
+            sizes: ["S", "M", "L", "XL"],
+            isNew: true,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 7,
+            title: "Fleece Lined Hoodie",
+            category: "Men's Collection",
+            price: 64.99,
+            oldPrice: 74.99,
+            discount: 13,
+            rating: 4.9,
+            reviews: 178,
+            image: "https://images.unsplash.com/photo-1620799140180-6e5c2b0a8d9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1972&q=80",
+            colors: ["Charcoal", "Navy", "Olive"],
+            sizes: ["S", "M", "L", "XL", "XXL"],
+            isNew: false,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        },
+        {
+            id: 8,
+            title: "Oversized Graphic Hoodie",
+            category: "Women's Collection",
+            price: 52.99,
+            oldPrice: 62.99,
+            discount: 16,
+            rating: 4.5,
+            reviews: 93,
+            image: "https://images.unsplash.com/photo-1600269452131-93be270a3677?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+            colors: ["Pink", "Black", "White"],
+            sizes: ["S", "M", "L"],
+            isNew: true,
+            isWishlisted: false,
+            inCart: false,
+            quantity: 1
+        }
+        // More products can be added here
     ];
 
     // Display Products
     const productGrid = document.getElementById('product-grid');
     const loadMoreBtn = document.getElementById('load-more');
     const filterSelect = document.getElementById('filter');
-    let displayedProducts = 8;
-    const productsPerLoad = 4;
+    let displayedProducts = 8; // Initial number of products to display
+    const productsPerLoad = 4; // Number of products to load each time
     
     function displayProducts(filter = 'all', count = displayedProducts) {
         productGrid.innerHTML = '';
@@ -133,8 +252,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="product-actions">
+                    <button class="action-btn quickview-btn" data-id="${product.id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
                     <button class="action-btn wishlist-btn" data-id="${product.id}">
-                        <i class="${wishlist.includes(product.id) ? 'fas' : 'far'} fa-heart"></i>
+                        <i class="${product.isWishlisted ? 'fas' : 'far'} fa-heart"></i>
                     </button>
                 </div>
                 
@@ -161,12 +283,14 @@ document.addEventListener('DOMContentLoaded', function() {
             productGrid.appendChild(productCard);
         });
         
+        // Update load more button visibility
         if (filteredProducts.length <= count) {
             loadMoreBtn.style.display = 'none';
         } else {
             loadMoreBtn.style.display = 'inline-block';
         }
         
+        // Initialize event listeners for the newly added products
         initProductEvents();
     }
     
@@ -193,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartItemsContainer = document.querySelector('.cart-items');
     const cartTotal = document.querySelector('.total-price');
     const cartCount = document.querySelector('.cart-count');
-    const checkoutBtn = document.querySelector('.checkout-btn');
     
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     
@@ -487,8 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Wishlist Buttons
         document.querySelectorAll('.wishlist-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent event bubbling
+            btn.addEventListener('click', function() {
                 const productId = parseInt(this.dataset.id);
                 toggleWishlist(productId);
                 
@@ -513,18 +635,6 @@ document.addEventListener('DOMContentLoaded', function() {
             toast.classList.remove('active');
         }, 3000);
     }
-    
-    // Checkout Button
-    checkoutBtn.addEventListener('click', function() {
-        if (cart.length === 0) {
-            showToast('Your cart is empty', 'error');
-            return;
-        }
-        
-        showToast('Redirecting to checkout...', 'success');
-        // In a real implementation, you would redirect to the checkout page
-        // window.location.href = '/checkout';
-    });
     
     // Back to Top Button
     const backToTopBtn = document.querySelector('.back-to-top');
@@ -630,6 +740,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Collection Button Click
     document.querySelectorAll('.collection-btn').forEach(btn => {
         btn.addEventListener('click', function() {
+            // Here you would typically filter products by collection
+            // For now, we'll just scroll to the products section
             document.querySelector('#shop').scrollIntoView({
                 behavior: 'smooth'
             });
